@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+     layout:decorate="~{layouts/layout1}">
+     
+   <meta charset="UTF-8">
+   
+   <div layout:fragment="content" class="content">
+      <h2>상세 보기</h2>
+      <form th:action="@{/notice/update}" method="post">
+         <div class="form-group row">
+            <label>번호</label>
+            <input type="text" name="gno" class="form-control"
+               th:value="${dto.gno}" readonly>
+         </div>
+         <div class="form-group row">
+            <label>제목</label>
+            <input type="text" name="title" class="form-control"
+               th:value="${dto.title}">
+         </div>
+         <div class="form-group row">
+            <label>내용</label>
+            <textarea name="content" rows="5" 
+               class="form-control">[[${dto.content}]]</textarea>
+         </div>
+         <div class="form-group row">
+            <label>작성자</label>
+            <input type="text" name="writer" class="form-control"
+               th:value="${dto.writer}" readonly>
+         </div>
+         <div class="form-group row">
+            <label>등록일</label>
+            <input type="text" name="regTime" class="form-control"
+               th:value="${#temporals.format(dto.reg_time, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+         </div>
+         <div class="form-group row">
+            <label>수정일</label>
+            <input type="text" name="updateTime" class="form-control"
+               th:value="${#temporals.format(dto.update_time, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+         </div>
+           <div class="form-group row">
+         	<label >조회수</label>
+         	<input type="text" name="cnt" class="form-control"
+               th:value="${dto.cnt}" readonly> 
+   		</div>
+         <!-- <a th:href="@{/notice/list(page=${requestDto.page},
+            type=${requestDto.type}, keyword=${requestDto.keyword})}" class="btn btn-primary">목록</a> -->
+            
+          <div class="form-group row">
+			<div class="col-sm-3">
+			<th:block sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+				<button type="submit" class="btn btn-success">수정</button>
+				<a th:href="@{/notice/delete(gno=${dto.gno})}" 
+					th:onclick="return confirm('정말로 삭제하시겠습니까?')" class="btn btn-danger">삭제</a>
+			</th:block>	
+				<a th:href="@{/notice/list(page=${requestDto.page}, 
+            type=${requestDto.type}, keyword=${requestDto.keyword})}" class="btn btn-primary">목록</a>
+			</div>
+		</div>   
+      </form>
+   </div>
+</html>

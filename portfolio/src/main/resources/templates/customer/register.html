@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+     layout:decorate="~{layouts/layout1}"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+     
+   <meta charset="UTF-8">
+   
+   <div layout:fragment="content" class="content">
+      <h1>글쓰기</h1>
+      <form th:action="@{/customer/register}" method="post" th:onsubmit="return checkForm()">
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+         <div class="form-group row">
+            <label>제목</label>
+            <input type="text" name="title" class="form-control" placeholder="제목 입력">
+         </div>
+         <div class="form-group row">
+            <label>내용</label>
+            <textarea name="content" rows="5"  placeholder="내용 입력" class="form-control"></textarea>
+         </div>
+         <div class="form-group row">
+            <label>작성자</label>
+             <div class="col-sm-3" sec:authorize="isAuthenticated()">
+             <!--인증시 사용된 객체의 Username (ID)-->
+             </div>
+             <input type="text" name="writer" class="form-control" placeholder="작성자 입력" th:value="${#authentication.name}" readonly>
+            <!-- <input type="text" name="writer" class="form-control" placeholder="작성자 입력"> -->
+         </div>
+         <button type="submit" class="btn btn-primary">등록</button>
+      
+      
+      </form>
+   </div>
+</html>

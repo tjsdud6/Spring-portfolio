@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layouts/layout1}">
+	  
+	<meta charset="UTF-8">
+	
+	<div layout:fragment="content" class="content">
+		<h1>문의사항</h1>
+		<!-- 검색 폼 -->
+		<form th:action="@{/customer/list}" method="get" class="mt-4" id="searchForm">
+			<div class="input-group">
+				<input type="hidden" name="page" value="1">	
+				<div class="input-group-prepend">
+					<select name="type" class="custom-select">
+						<option th:selected="${pageRequestDto.type==null}">---------------</option>
+						<option th:value="t" th:selected="${pageRequestDto.type=='t'}">제목</option>
+						<option th:value="c" th:selected="${pageRequestDto.type=='c'}">내용</option>
+						<option th:value="w" th:selected="${pageRequestDto.type=='w'}">작성자</option>
+						<option th:value="tc" th:selected="${pageRequestDto.type=='tc'}">제목+내용</option>
+						<option th:value="tcw" th:selected="${pageRequestDto.type=='tcw'}">제목+내용+작성자</option>
+					</select>				
+				</div >
+				<input type="text" name="keyword" class="form-control" th:value="${pageRequestDto.keyword}">	
+				<div class="input-group-prepend">
+					<button type="button" class="btn btn-outline-secondary btn-search">검색</button>
+				</div>	
+			</div>
+		</form>
+		
+		<table class="table table-striped my-4">
+			<thead>
+				<tr>
+					<th>#</th><th>Title</th><th>Writer</th><th>Regdate</th><th>Hits</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="dto : ${result.dtoList}">
+					<td>[[${dto.gno}]]</td>
+					<td>
+						<a th:href="@{/customer/read(gno=${dto.gno}, page=${result.page},
+							type=${pageRequestDto.type},keyword=${pageRequestDto.keyword})}">[[${dto.title}]]</a> 
+					</td>
+					<td>[[${dto.writer}]]</td>
+					<td>[[${dto.regDate}]]</td>
+					<td>[[${dto.cnt}]]</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- 페이지처리 -->
+		<ul class="pagination justify-content-center align-items-center">
+		<!-- prev -->
+			<li class="page-item" th:if="${result.prev}">
+				<a th:href="@{/customer/list(page=${result.start-1})}" class="page-link">
+					Previous
+				</a>
+			</li>
+		<!--  현재페이지 -->
+			<li th:class="'page-item ' +${result.page == page ? 'active' : ''}" th:each="page : ${result.pageList}">
+				<a th:href="@{/customer/list(page=${page},
+					type=${pageRequestDto.type},keyword=${pageRequestDto.keyword})}" class="page-link">
+					[[${page}]]
+				</a>
+			</li>
+			<!-- next -->
+			<li class="page-item" th:if="${result.next}">
+				<a th:href="@{/customer/list(page=${result.end+1})}" class="page-link">
+					Next
+				</a>
+			</li>
+		</ul>
+		
+		<div align="right">
+			<a th:href="@{/customer/register}" class="btn btn-primary">글쓰기</a>
+		</div>
+		<!-- 모달창 -->
+		<div class="modal" tabindex="-1">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Modal title</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        <p>게시글이 등록되었습니다.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- 모달끝 -->
+		
+		<!-- 자바스크립트 영역 -->
+      <script th:inline="javascript">
+         $(document).ready(function(){
+            let msg = [[${msg}]]
+            
+            //gno 글번호가 있으면 모달창이 열림
+            if(msg){
+               $(".modal").modal();
+            }
+            
+            //검색 폼 전송
+            let searchForm = $("#searchForm");
+            
+            $(".btn-search").click(function(){
+            	searchForm.submit();
+            });
+            
+            
+            checkModal(msg);
+            
+            function checkModal(msg){
+               if(parseInt(msg) > 0){
+                  $(".modal-body").html("게시글 " + parseInt(msg) + "번이 등록 되었습니다.");
+               }
+            }
+            /* $(".modal").modal('show'); */
+            $(".close").click(function(){
+            $(".modal").modal('hide');               
+            });
+         });
+      </script>
+	</div>
+</html>

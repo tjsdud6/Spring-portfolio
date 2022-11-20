@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+</head>
+   <div th:fragment="footer" class="footer">
+      <footer class="page-footer font-small cyan darken-3">
+      <img class="goTop" src="/img/top.png" alt="goTopIcon" onclick="goTop()">
+            <div class="footer-copyright text-center py-3">
+                2022 Himidea FullStack Software Engineer Course
+            </div>
+            <script>
+            function goTop(){
+               $('html').animate({scrollTop : 0}, 1000);
+            }
+         </script>
+         <style>
+         /* 맨위로 이동 CSS */
+         .goTop{width:50px; height:50px; position: fixed; right:50px; bottom: 50px;}
+         </style>
+        </footer>
+   </div>
+</html>
